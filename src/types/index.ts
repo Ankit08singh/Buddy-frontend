@@ -14,6 +14,16 @@ export interface AuthState {
   isLoading: boolean;
 }
 
+export interface EngagementSummary {
+  total_points: number;
+  current_streak: number;
+  total_sessions: number;
+  total_messages: number;
+  daily_chat_seconds: number;
+  daily_chat_cap_seconds: number;
+  billable_chat_seconds_remaining: number;
+}
+
 export interface ChatMessage {
   id: string;
   sender: "user" | "ai";
@@ -41,6 +51,12 @@ export interface RegisterAdminResponse {
 export interface ChatResponse {
   reply: string;
   session_id: string;
+  score: EngagementSummary;
+}
+
+export interface ScoreCache {
+  score: EngagementSummary;
+  updatedAt: string;
 }
 
 export interface EndSessionResponse {

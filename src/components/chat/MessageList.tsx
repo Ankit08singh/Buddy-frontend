@@ -6,7 +6,7 @@ import type { ChatMessage } from "@/types";
 interface MessageListProps {
   messages: ChatMessage[];
   isLoading: boolean;
-  bottomRef: React.RefObject<HTMLDivElement>;
+  bottomRef: React.RefObject<HTMLDivElement | null>;
   onQuickAction: (text: string) => void;
 }
 
@@ -64,7 +64,7 @@ export const MessageList: React.FC<MessageListProps> = ({
               msg.sender === "user" ? "flex-row-reverse" : ""
             }`}
           >
-            <div className="flex-shrink-0 mt-1">
+            <div className="shrink-0 mt-1">
               {msg.sender === "ai" ? (
                 <BuddyAvatar size="sm" />
               ) : (
@@ -91,7 +91,7 @@ export const MessageList: React.FC<MessageListProps> = ({
         
         {isLoading && (
           <div className="flex gap-3 animate-in fade-in duration-300">
-            <BuddyAvatar size="sm" className="flex-shrink-0 mt-1" />
+            <BuddyAvatar size="sm" className="shrink-0 mt-1" />
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border border-(--border) px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
               <div className="flex items-center gap-1.5 px-0.5">
                 <span className="w-1.5 h-1.5 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />

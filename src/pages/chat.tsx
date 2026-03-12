@@ -12,7 +12,7 @@ interface ChatPageProps {
 }
 
 function ChatContent({ darkMode, onToggleDarkMode }: ChatPageProps) {
-  const { messages, isLoading, sendMessage, clearChat } = useChat();
+  const { messages, score, isLoading, sendMessage, clearChat } = useChat();
   const bottomRef = useRef<HTMLDivElement>(null);
   const [quickAction, setQuickAction] = useState<string | undefined>(undefined);
 
@@ -22,7 +22,7 @@ function ChatContent({ darkMode, onToggleDarkMode }: ChatPageProps) {
   }, [messages.length, isLoading]);
 
   return (
-    <div className="flex flex-col h-[100dvh] bg-(--background) overflow-hidden">
+    <div className="flex flex-col h-dvh bg-(--background) overflow-hidden">
       <Head>
         <title>Chat with Buddy — Buddy AI</title>
       </Head>
@@ -32,6 +32,7 @@ function ChatContent({ darkMode, onToggleDarkMode }: ChatPageProps) {
         onToggleDarkMode={onToggleDarkMode} 
         onClearChat={clearChat}
         hasMessages={messages.length > 0}
+        score={score}
       />
 
       <MessageList 

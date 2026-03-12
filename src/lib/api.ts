@@ -6,6 +6,7 @@ import type {
   EndSessionResponse,
   GetEmployeesResponse,
   GetEmployeeTrendResponse,
+  EngagementSummary,
 } from "@/types";
 
 const BASE_URL = "http://localhost:5000";
@@ -80,6 +81,11 @@ export const api = {
       request<EndSessionResponse>("/api/chat/end-session", {
         method: "POST",
       }),
+
+    // Note: This endpoint may not be implemented in all backend versions. 
+    // Handled with fallback logic in useChat hook.
+    getMyScoreFallback: () =>
+      request<{ employee_id: string; score: EngagementSummary }>("/api/chat/score"),
   },
 
   admin: {

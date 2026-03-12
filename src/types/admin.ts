@@ -1,4 +1,7 @@
 import type { Emotion, RiskLevel, OverallSentiment } from "./enums";
+import type { EngagementSummary } from "./index";
+
+// --- RECONCILED BACKEND CONTRACT TYPES ---
 
 export interface EmployeeEngagement {
   total_sessions: number;
@@ -43,24 +46,50 @@ export interface FlightRiskSummary {
   reason: string;
 }
 
-export interface TrendEngagementSummary {
-  total_points: number;
-  current_streak: number;
-  total_sessions: number;
-}
+export type ScorePayload = EngagementSummary;
 
 export interface GetEmployeeTrendResponse {
   employee_id: string;
   trends: TrendEntry[];
   flightRisk: FlightRiskSummary;
-  engagement: TrendEngagementSummary;
+  engagement: EngagementSummary;
 }
 
-export interface ApiError {
-  error: string;
+// --- DERIVED ANALYTICS TYPES ---
+
+export interface VibeTrendPoint {
+  date: string;
+  vibe_score: number;
+  risk: RiskLevel;
 }
 
-// Keep some internal types for UI if they don't conflict
+export interface EmotionDistributionPoint {
+  emotion: Emotion;
+  count: number;
+  percentage: number;
+}
+
+export interface EmotionTimelinePoint {
+  date: string;
+  emotion: Emotion;
+  vibe_score: number;
+  risk: RiskLevel;
+}
+
+// --- STREAK & MOTIVATION TYPES ---
+
+export type StreakTier = 'none' | 'starter' | 'active' | 'elite';
+
+export interface StreakMeta {
+  tier: StreakTier;
+  label: string;
+  colorClass: string;
+  icon: string;
+  pulse?: boolean;
+}
+
+// --- SHARED ADMIN UI TYPES ---
+
 export interface TeamStats {
   employee_count: number;
   active_employees: number;

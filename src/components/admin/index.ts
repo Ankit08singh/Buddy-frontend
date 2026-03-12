@@ -1,7 +1,7 @@
-// Admin Dashboard Components
-export { MetricCard } from "./MetricCard";
-export { RiskAlertPanel } from "./RiskAlertPanel";
-export { EmployeeDataTable } from "./EmployeeDataTable";
-export { TeamHealthScore } from "./TeamHealthScore";
-export { VibeScoreTrendChart } from "./VibeScoreTrendChart";
-export { EmployeeDetailView } from "./EmployeeDetailView";
+export * from "./MetricCard";
+export * from "./EmployeeDataTable";
+export * from "./VibeScoreTrendChart";
+export * from "./EmployeeDetailView";
+export * from "./EmployeeAnalyticsSection";
+export * from "./EmotionDistributionCharts";
+export * from "./EmotionTimelineChart";

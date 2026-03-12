@@ -56,6 +56,7 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
     departments: [] as string[],
     riskLevels: [] as any[],
     activityStatus: "all" as any,
+    streakTier: "all" as any,
     timeRange: "month" as any,
     sortField: "name" as any,
     sortDirection: "asc" as any
