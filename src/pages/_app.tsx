@@ -1,7 +1,8 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { useState, useEffect } from "react";
-import Layout from "@/components/Layout";
+import { AuthProvider } from "@/components/providers/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = useState(false);
@@ -21,12 +22,19 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [darkMode]);
 
   return (
-    <Layout>
+    <AuthProvider>
       <Component
         {...pageProps}
         darkMode={darkMode}
-        onToggleDarkMode={() => setDarkMode((prev) => !prev)}
+        toggleDarkMode={() => setDarkMode((prev) => !prev)}
       />
-    </Layout>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "!bg-white dark:!bg-slate-800 !text-slate-900 dark:!text-slate-100 !shadow-lg !border !border-slate-200 dark:!border-slate-700",
+          duration: 4000,
+        }}
+      />
+    </AuthProvider>
   );
 }
