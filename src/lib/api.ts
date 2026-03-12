@@ -1,13 +1,11 @@
 import type {
   LoginResponse,
-  RegisterResponse,
+  RegisterEmployeeResponse,
+  RegisterAdminResponse,
   ChatResponse,
   EndSessionResponse,
-  EmployeeListResponse,
-  VibeTrendResponse,
-  TeamStats,
-  RiskAlert,
-  ActivityEntry,
+  GetEmployeesResponse,
+  GetEmployeeTrendResponse,
 } from "@/types";
 
 const BASE_URL = "http://localhost:5000";
@@ -59,13 +57,13 @@ export const api = {
       department?: string;
       job_title?: string;
     }) =>
-      request<RegisterResponse>("/api/auth/register/employee", {
+      request<RegisterEmployeeResponse>("/api/auth/register/employee", {
         method: "POST",
         body: JSON.stringify(data),
       }),
 
     registerAdmin: (data: { name: string; email: string; password: string }) =>
-      request<RegisterResponse>("/api/auth/register/admin", {
+      request<RegisterAdminResponse>("/api/auth/register/admin", {
         method: "POST",
         body: JSON.stringify(data),
       }),
@@ -85,32 +83,27 @@ export const api = {
   },
 
   admin: {
-    getEmployees: () => request<EmployeeListResponse>("/api/admin/employees"),
+    getEmployees: () => 
+      request<GetEmployeesResponse>("/api/admin/employees"),
 
-    getVibeTrend: (employeeId?: string, range?: string) => {
-      if (employeeId) {
-        const params = range ? `?range=${range}` : "";
-        return request<VibeTrendResponse>(`/api/admin/trend/${encodeURIComponent(employeeId)}${params}`);
-      }
-      const params = range ? `?range=${range}` : "";
-      return request<VibeTrendResponse>(`/api/admin/trend/team${params}`);
+    getVibeTrend: (employeeId: string) => 
+      request<GetEmployeeTrendResponse>(`/api/admin/trend/${encodeURIComponent(employeeId)}`),
+
+    // Endpoints below are explicitly documented as "Not Implemented" in the current backend
+    // They are kept as placeholders that will throw 404/501 errors if called
+    getTeamStats: () => {
+      console.warn("getTeamStats is not implemented in backend. Using client-side computation.");
+      throw new Error("NOT_IMPLEMENTED");
     },
-
-    getTeamStats: () => request<TeamStats>("/api/admin/stats"),
-
-    getRiskAlerts: () => 
-      request<{ alerts: RiskAlert[] }>("/api/admin/alerts"),
-
-    getEmployeeActivities: (employeeId: string) =>
-      request<{ activities: ActivityEntry[] }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/activities`),
-
-    getEmployeeAlerts: (employeeId: string) =>
-      request<{ alerts: RiskAlert[] }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/alerts`),
-
-    updateEmployeeRisk: (employeeId: string, level: "low" | "medium" | "high") =>
-      request<{ success: boolean }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/risk`, {
-        method: "PATCH",
-        body: JSON.stringify({ level }),
-      }),
+    
+    getTeamTrend: () => {
+      console.warn("getTeamTrend is not implemented in backend.");
+      throw new Error("NOT_IMPLEMENTED");
+    },
+    
+    getGlobalAlerts: () => {
+      console.warn("getGlobalAlerts is not implemented in backend.");
+      throw new Error("NOT_IMPLEMENTED");
+    }
   },
 };

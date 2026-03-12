@@ -23,13 +23,10 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
   const { 
     employees, 
     teamStats, 
-    vibeChartData, 
     isLoading, 
-    refresh, 
-    updateVibeTrendRange 
+    refresh 
   } = useAdminDashboard();
   
-  const [vibeRange, setVibeRange] = useState<"7d" | "30d" | "90d">("30d");
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
 
   const handleEmployeeClick = (id: string) => {
@@ -39,13 +36,8 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
   const handleContactEmployee = (employeeId: string, method: "email" | "phone") => {
     const employee = employees.find(emp => emp.employee_id === employeeId);
     if (employee) {
-      if (method === "email" && employee.email) {
-        window.location.href = `mailto:${employee.email}`;
-      } else if (method === "phone" && employee.phone) {
-        window.location.href = `tel:${employee.phone}`;
-      } else {
-        toast.error(`No ${method} contact info for this employee`);
-      }
+      // Backend EmployeeListItem doesn't currently provide email/phone
+      toast.error(`Direct ${method} contact info is not provided by the current backend`);
     }
   };
 
@@ -166,18 +158,6 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
               />
             </section>
 
-            {/* Chart Section */}
-            <section>
-              <VibeScoreTrendChart 
-                data={vibeChartData} 
-                loading={isLoading} 
-                timeRange={vibeRange}
-                onTimeRangeChange={(r) => {
-                  setVibeRange(r);
-                  updateVibeTrendRange(r);
-                }}
-              />
-            </section>
 
             {/* Data Table */}
             <section>

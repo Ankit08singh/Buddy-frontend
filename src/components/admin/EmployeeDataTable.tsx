@@ -1,13 +1,21 @@
 import React from "react";
 import { Search, Filter, Download, ArrowUpRight, ShieldAlert, Heart, Zap } from "lucide-react";
 import { Avatar, EmotionBadge, RiskBadge } from "@/components/ui";
-import type { Employee, FilterState } from "@/types";
+import type { EmployeeListItem, FilterTimeRange, RiskLevel } from "@/types";
 
 interface EmployeeDataTableProps {
-  employees: Employee[];
+  employees: EmployeeListItem[];
   loading: boolean;
-  filters: FilterState;
-  onFilterChange: (filters: FilterState) => void;
+  filters: {
+    search: string;
+    departments: string[];
+    riskLevels: RiskLevel[];
+    activityStatus: any;
+    timeRange: FilterTimeRange;
+    sortField: any;
+    sortDirection: any;
+  };
+  onFilterChange: (filters: any) => void;
   onEmployeeClick: (id: string) => void;
   onExport: () => void;
 }
@@ -22,7 +30,7 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
 }) => {
   const filtered = employees.filter(emp => {
     if (filters.search && !emp.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
-    if (filters.riskLevels.length && !filters.riskLevels.includes(emp.flight_risk?.level as any)) return false;
+    if (filters.riskLevels.length && !filters.riskLevels.includes(emp.latest_sentiment?.flight_risk_level as any)) return false;
     return true;
   });
 
@@ -112,12 +120,12 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
                       <Avatar name={emp.name} size="sm" className="ring-2 ring-transparent group-hover:ring-primary/20 transition-all" />
                       <div>
                         <p className="text-sm font-bold text-(--foreground)">{emp.name}</p>
-                        <p className="text-xs text-(--muted-foreground)">{emp.email}</p>
+                        <p className="text-xs text-(--muted-foreground) uppercase tracking-tighter opacity-50">{emp.employee_id}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <RiskBadge risk={emp.flight_risk?.level || "low"} />
+                    <RiskBadge risk={emp.latest_sentiment?.flight_risk_level || "low"} />
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
@@ -134,7 +142,7 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
                     <div className="flex items-center gap-4 text-xs font-bold text-(--muted-foreground)">
                       <div className="flex items-center gap-1">
                         <Zap className="w-3 h-3 text-amber-500" />
-                        {emp.engagement?.session_count || 0} sess
+                        {emp.engagement?.total_sessions || 0} sess
                       </div>
                     </div>
                   </td>

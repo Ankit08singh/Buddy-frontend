@@ -1,59 +1,73 @@
 import { useState, useEffect, useCallback } from "react";
 import { api } from "@/lib/api";
-import type { Employee, TeamStats, RiskAlert, VibeChartData } from "@/types";
+import type { 
+  EmployeeListItem, 
+  TeamStats, 
+  RiskAlert, 
+  TrendEntry 
+} from "@/types";
 import toast from "react-hot-toast";
 
 export function useAdminDashboard() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<EmployeeListItem[]>([]);
   const [teamStats, setTeamStats] = useState<TeamStats | null>(null);
   const [riskAlerts, setRiskAlerts] = useState<RiskAlert[]>([]);
-  const [vibeChartData, setVibeChartData] = useState<VibeChartData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchDashboardData = useCallback(async (vibeRange: string = "30d") => {
+  const fetchDashboardData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [empRes, statsRes, alertsRes, vibeRes] = await Promise.all([
-        api.admin.getEmployees(),
-        api.admin.getTeamStats().catch(() => null),
-        api.admin.getRiskAlerts().catch(() => ({ alerts: [] })),
-        api.admin.getVibeTrend(undefined, vibeRange).catch(() => ({ trends: [] }))
-      ]);
+      // Reconciling with backend: Only GET /api/admin/employees is reliably implemented for workforce data
+      const empRes = await api.admin.getEmployees();
+      
+      const employeeList = empRes.employees || [];
+      setEmployees(employeeList);
 
-      setEmployees(empRes.employees);
-      setRiskAlerts(alertsRes.alerts);
-      setVibeChartData((vibeRes.trends || []).map(t => ({ ...t, value: t.vibe_score })));
+      // Client-Side Computed Metrics as specified in Backend Manifest
+      const avgVibe = employeeList.length > 0
+        ? employeeList.reduce((sum, emp) => sum + (emp.latest_sentiment?.vibe_score || 0), 0) / employeeList.length
+        : 0;
 
-      if (statsRes) {
-        setTeamStats(statsRes);
-      } else {
-        // Fallback stats calculation
-        const activeCount = empRes.employees.filter(e => (e.engagement?.session_count ?? 0) > 0).length;
-        const avgScore = empRes.employees.length ? 
-          empRes.employees.reduce((s, e) => s + (e.latest_sentiment?.vibe_score ?? 0), 0) / empRes.employees.length : 0;
-        
-        setTeamStats({
-          employee_count: empRes.employees.length,
-          active_employees: activeCount,
-          average_vibe_score: avgScore,
-          high_risk_count: empRes.employees.filter(e => e.flight_risk?.level === "high").length,
-          medium_risk_count: empRes.employees.filter(e => e.flight_risk?.level === "medium").length,
-          low_risk_count: empRes.employees.filter(e => e.flight_risk?.level === "low").length,
-        });
-      }
+      const highRisk = employeeList.filter(e => e.latest_sentiment?.flight_risk_level === "high").length;
+      const mediumRisk = employeeList.filter(e => e.latest_sentiment?.flight_risk_level === "medium").length;
+      const lowRisk = employeeList.filter(e => e.latest_sentiment?.flight_risk_level === "low").length;
+      const coverage = employeeList.filter(e => e.latest_sentiment !== null).length;
+
+      // Active employees logic: engaged in last 7 days or has points
+      const activeCount = employeeList.filter(e => 
+        e.engagement.total_sessions > 0 || (e.engagement.total_points || 0) > 0
+      ).length;
+
+      setTeamStats({
+        employee_count: employeeList.length,
+        active_employees: activeCount,
+        average_vibe_score: avgVibe,
+        high_risk_count: highRisk,
+        medium_risk_count: mediumRisk,
+        low_risk_count: lowRisk,
+        active_sentiment_coverage: coverage
+      });
+
+      // alerts are not implemented in backend, generating local alerts from high risk employees
+      const derivedAlerts: RiskAlert[] = employeeList
+        .filter(e => e.latest_sentiment?.flight_risk_level === "high")
+        .map(e => ({
+          id: `alert-${e.employee_id}`,
+          employee_id: e.employee_id,
+          employee_name: e.name,
+          level: "high",
+          message: `High risk detected for ${e.name} in ${e.department}. Score: ${e.latest_sentiment?.vibe_score}`,
+          created_at: new Date().toISOString()
+        }));
+      
+      setRiskAlerts(derivedAlerts);
+
     } catch (err: any) {
-      toast.error(err.message || "Failed to load dashboard data");
+      if (err.message !== "NOT_IMPLEMENTED") {
+        toast.error(err.message || "Failed to load dashboard data");
+      }
     } finally {
       setIsLoading(false);
-    }
-  }, []);
-
-  const updateVibeTrendRange = useCallback(async (range: string) => {
-    try {
-      const res = await api.admin.getVibeTrend(undefined, range);
-      setVibeChartData((res.trends || []).map(t => ({ ...t, value: t.vibe_score })));
-    } catch (err) {
-      toast.error("Failed to update chart data");
     }
   }, []);
 
@@ -65,9 +79,8 @@ export function useAdminDashboard() {
     employees,
     teamStats,
     riskAlerts,
-    vibeChartData,
+    vibeChartData: [], // Dashboard-wide trend not implemented in backend
     isLoading,
-    refresh: fetchDashboardData,
-    updateVibeTrendRange
+    refresh: fetchDashboardData
   };
 }

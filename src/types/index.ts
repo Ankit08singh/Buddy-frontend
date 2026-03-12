@@ -1,10 +1,10 @@
-export type Role = "employee" | "admin";
+export type UserRole = "employee" | "admin";
 
 export interface User {
   id: string;
   email: string;
   name: string;
-  role: Role;
+  role: UserRole;
   employee_id?: string;
 }
 
@@ -12,13 +12,6 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-}
-
-export interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
 }
 
 export interface ChatMessage {
@@ -30,14 +23,19 @@ export interface ChatMessage {
 
 export interface LoginResponse {
   token: string;
-  role: Role;
+  role: UserRole;
   employee_id?: string;
 }
 
-export interface RegisterResponse {
+export interface RegisterEmployeeResponse {
   token: string;
-  role: Role;
-  employee_id?: string;
+  role: "employee";
+  employee_id: string;
+}
+
+export interface RegisterAdminResponse {
+  token: string;
+  role: "admin";
 }
 
 export interface ChatResponse {
