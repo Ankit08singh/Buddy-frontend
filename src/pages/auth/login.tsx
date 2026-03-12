@@ -43,8 +43,13 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      <div className="min-h-screen flex items-center justify-center bg-(--background)">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center animate-pulse shadow-xl shadow-primary/20">
+            <span className="text-(--primary-foreground) text-lg font-serif">B</span>
+          </div>
+          <span className="text-sm font-medium text-(--muted-foreground) tracking-wide">Validating...</span>
+        </div>
       </div>
     );
   }
@@ -54,30 +59,33 @@ export default function LoginPage() {
       <Head>
         <title>Sign In — Buddy</title>
       </Head>
+      <div className="min-h-screen flex items-center justify-center px-4 bg-(--background) relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent/5 rounded-full blur-3xl" />
 
-      <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md relative z-10">
           <div className="text-center mb-8">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <span className="text-white text-xl font-bold">B</span>
+            <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
+              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-xl shadow-primary/20 transition-transform group-hover:rotate-3">
+                <span className="text-primary-foreground text-2xl font-serif">B</span>
               </div>
             </Link>
-            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Welcome back</h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">Sign in to continue to Buddy</p>
+            <h1 className="text-3xl font-bold text-(--foreground) tracking-tight">Welcome back</h1>
+            <p className="text-(--muted-foreground) mt-2">Sign in to your Buddy companion</p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-700 p-8">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/20 dark:border-slate-700/50 p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20">
+                  <p className="text-sm text-destructive font-medium">{error}</p>
                 </div>
               )}
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                  Email
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-(--foreground) px-1">
+                  Email Address
                 </label>
                 <input
                   id="email"
@@ -85,14 +93,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   autoComplete="email"
                   autoFocus
                 />
               </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-(--foreground) px-1">
                   Password
                 </label>
                 <div className="relative">
@@ -102,13 +110,13 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full px-4 py-2.5 pr-11 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                    className="w-full px-4 py-3 pr-12 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     autoComplete="current-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-primary transition-colors"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -116,21 +124,27 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              <div className="flex items-center justify-end">
+                <Link href="#" className="text-sm font-medium text-primary hover:text-accent transition-colors">
+                  Forgot password?
+                </Link>
+              </div>
+
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl bg-primary hover:bg-emerald-900 text-primary-foreground font-black transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98] outline-none ring-offset-2 focus:ring-2 focus:ring-primary"
               >
-                {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
+                {isLoading ? "Signing in..." : "Sign in to Buddy"}
               </button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/register" className="text-indigo-500 hover:text-indigo-600 font-medium">
-                  Create one
+            <div className="mt-8 text-center">
+              <p className="text-sm text-(--muted-foreground)">
+                New to Buddy?{" "}
+                <Link href="/auth/register" className="text-primary hover:text-accent font-bold transition-colors">
+                  Create an account
                 </Link>
               </p>
             </div>

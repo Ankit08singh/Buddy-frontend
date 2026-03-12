@@ -30,7 +30,6 @@ export default function RegisterPage() {
   const passwordChecks = {
     length: password.length >= 8,
     hasLetter: /[a-zA-Z]/.test(password),
-    hasNumber: /\d/.test(password),
   };
   const isPasswordValid = passwordChecks.length && passwordChecks.hasLetter;
 
@@ -71,8 +70,13 @@ export default function RegisterPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      <div className="min-h-screen flex items-center justify-center bg-(--background)">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center animate-pulse shadow-xl shadow-primary/20">
+            <span className="text-(--primary-foreground) text-lg font-serif">B</span>
+          </div>
+          <span className="text-sm font-medium text-(--muted-foreground) tracking-wide">Securing session...</span>
+        </div>
       </div>
     );
   }
@@ -82,28 +86,31 @@ export default function RegisterPage() {
       <Head>
         <title>Create Account — Buddy</title>
       </Head>
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-(--background) relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 rounded-full blur-3xl" />
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md relative z-10">
           <div className="text-center mb-8">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                <span className="text-white text-xl font-bold">B</span>
+            <Link href="/" className="inline-flex items-center gap-2 mb-6 group">
+              <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-xl shadow-primary/20 transition-transform group-hover:rotate-3">
+                <span className="text-primary-foreground text-2xl font-serif">B</span>
               </div>
             </Link>
-            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Create your account</h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-1">Get started with Buddy</p>
+            <h1 className="text-3xl font-bold text-(--foreground) tracking-tight">Create account</h1>
+            <p className="text-(--muted-foreground) mt-2">Join your workplace companion</p>
           </div>
 
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-700 p-8">
-            <div className="flex p-1 bg-slate-100 dark:bg-slate-700 rounded-lg mb-6">
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-3xl shadow-2xl shadow-primary/5 border border-white/20 dark:border-slate-700/50 p-8">
+            <div className="flex p-1.5 bg-(--secondary) rounded-2xl mb-8">
               <button
                 type="button"
                 onClick={() => setType("employee")}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition ${
+                className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${
                   type === "employee"
-                    ? "bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm"
-                    : "text-slate-500 dark:text-slate-400"
+                    ? "bg-white dark:bg-slate-600 text-primary shadow-sm"
+                    : "text-(--muted-foreground) hover:text-(--foreground)"
                 }`}
               >
                 Employee
@@ -111,26 +118,26 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setType("admin")}
-                className={`flex-1 py-2 text-sm font-medium rounded-md transition ${
+                className={`flex-1 py-2.5 text-sm font-bold rounded-xl transition-all ${
                   type === "admin"
-                    ? "bg-white dark:bg-slate-600 text-slate-900 dark:text-white shadow-sm"
-                    : "text-slate-500 dark:text-slate-400"
+                    ? "bg-white dark:bg-slate-600 text-primary shadow-sm"
+                    : "text-(--muted-foreground) hover:text-(--foreground)"
                 }`}
               >
                 Admin
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
-                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <div className="p-4 rounded-2xl bg-destructive/10 border border-destructive/20">
+                  <p className="text-sm text-destructive font-medium">{error}</p>
                 </div>
               )}
 
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                  Full Name <span className="text-red-500">*</span>
+              <div className="space-y-2">
+                <label htmlFor="name" className="block text-sm font-semibold text-(--foreground) px-1">
+                  Full Name <span className="text-accent">*</span>
                 </label>
                 <input
                   id="name"
@@ -138,14 +145,14 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   autoFocus
                 />
               </div>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                  Email <span className="text-red-500">*</span>
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-semibold text-(--foreground) px-1">
+                  Email Address <span className="text-accent">*</span>
                 </label>
                 <input
                   id="email"
@@ -153,14 +160,14 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  className="w-full px-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                   autoComplete="email"
                 />
               </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                  Password <span className="text-red-500">*</span>
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-(--foreground) px-1">
+                  Password <span className="text-accent">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -169,25 +176,25 @@ export default function RegisterPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Min. 8 characters"
-                    className="w-full px-4 py-2.5 pr-11 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                    className="w-full px-4 py-3 pr-12 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     autoComplete="new-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-(--muted-foreground) hover:text-primary transition-colors"
                     tabIndex={-1}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
                 {password && (
-                  <div className="mt-2 flex items-center gap-3 text-xs">
-                    <span className={`flex items-center gap-1 ${passwordChecks.length ? "text-green-600" : "text-slate-400"}`}>
+                  <div className="mt-2 flex items-center gap-3 text-xs px-1">
+                    <span className={`flex items-center gap-1 font-medium ${passwordChecks.length ? "text-primary" : "text-(--muted-foreground)"}`}>
                       {passwordChecks.length ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
                       8+ chars
                     </span>
-                    <span className={`flex items-center gap-1 ${passwordChecks.hasLetter ? "text-green-600" : "text-slate-400"}`}>
+                    <span className={`flex items-center gap-1 font-medium ${passwordChecks.hasLetter ? "text-primary" : "text-(--muted-foreground)"}`}>
                       {passwordChecks.hasLetter ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
                       Letter
                     </span>
@@ -196,51 +203,51 @@ export default function RegisterPage() {
               </div>
 
               {type === "employee" && (
-                <>
-                  <div>
-                    <label htmlFor="department" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                      Department <span className="text-slate-400 font-normal">(optional)</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label htmlFor="department" className="block text-sm font-semibold text-(--foreground) px-1">
+                      Department
                     </label>
                     <input
                       id="department"
                       type="text"
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
-                      placeholder="e.g. Engineering"
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                      placeholder="Engineering"
+                      className="w-full px-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="jobTitle" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-                      Job Title <span className="text-slate-400 font-normal">(optional)</span>
+                  <div className="space-y-2">
+                    <label htmlFor="jobTitle" className="block text-sm font-semibold text-(--foreground) px-1">
+                      Job Title
                     </label>
                     <input
                       id="jobTitle"
                       type="text"
                       value={jobTitle}
                       onChange={(e) => setJobTitle(e.target.value)}
-                      placeholder="e.g. Software Engineer"
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                      placeholder="Developer"
+                      className="w-full px-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-(--foreground) placeholder:text-(--muted-foreground) focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
                     />
                   </div>
-                </>
+                </div>
               )}
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-2.5 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+                className="w-full py-4 rounded-2xl bg-primary hover:bg-emerald-900 text-primary-foreground font-black transition-all shadow-xl shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98] mt-4 outline-none ring-offset-2 focus:ring-2 focus:ring-primary"
               >
-                {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
-                {isLoading ? "Creating account..." : "Create account"}
+                {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
+                {isLoading ? "Creating account..." : "Start Your Journey"}
               </button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-slate-500 dark:text-slate-400">
+            <div className="mt-8 text-center">
+              <p className="text-sm text-(--muted-foreground)">
                 Already have an account?{" "}
-                <Link href="/auth/login" className="text-indigo-500 hover:text-indigo-600 font-medium">
+                <Link href="/auth/login" className="text-primary hover:text-accent font-bold transition-colors">
                   Sign in
                 </Link>
               </p>

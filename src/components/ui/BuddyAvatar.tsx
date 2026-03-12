@@ -14,7 +14,7 @@ const sizeClasses = {
 export function BuddyAvatar({ size = "md", className = "" }: BuddyAvatarProps) {
   return (
     <div
-      className={`rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20 ${sizeClasses[size]} ${className}`}
+      className={`rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-600/20 ${sizeClasses[size]} ${className}`}
     >
       B
     </div>

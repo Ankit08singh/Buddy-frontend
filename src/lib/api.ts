@@ -5,6 +5,9 @@ import type {
   EndSessionResponse,
   EmployeeListResponse,
   VibeTrendResponse,
+  TeamStats,
+  RiskAlert,
+  ActivityEntry,
 } from "@/types";
 
 const BASE_URL = "http://localhost:5000";
@@ -84,7 +87,30 @@ export const api = {
   admin: {
     getEmployees: () => request<EmployeeListResponse>("/api/admin/employees"),
 
-    getVibeTrend: (employeeId: string) =>
-      request<VibeTrendResponse>(`/api/admin/trend/${encodeURIComponent(employeeId)}`),
+    getVibeTrend: (employeeId?: string, range?: string) => {
+      if (employeeId) {
+        const params = range ? `?range=${range}` : "";
+        return request<VibeTrendResponse>(`/api/admin/trend/${encodeURIComponent(employeeId)}${params}`);
+      }
+      const params = range ? `?range=${range}` : "";
+      return request<VibeTrendResponse>(`/api/admin/trend/team${params}`);
+    },
+
+    getTeamStats: () => request<TeamStats>("/api/admin/stats"),
+
+    getRiskAlerts: () => 
+      request<{ alerts: RiskAlert[] }>("/api/admin/alerts"),
+
+    getEmployeeActivities: (employeeId: string) =>
+      request<{ activities: ActivityEntry[] }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/activities`),
+
+    getEmployeeAlerts: (employeeId: string) =>
+      request<{ alerts: RiskAlert[] }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/alerts`),
+
+    updateEmployeeRisk: (employeeId: string, level: "low" | "medium" | "high") =>
+      request<{ success: boolean }>(`/api/admin/employees/${encodeURIComponent(employeeId)}/risk`, {
+        method: "PATCH",
+        body: JSON.stringify({ level }),
+      }),
   },
 };
