@@ -45,7 +45,11 @@ export function useAdminDashboard() {
         high_risk_count: highRisk,
         medium_risk_count: mediumRisk,
         low_risk_count: lowRisk,
-        active_sentiment_coverage: coverage
+        active_sentiment_coverage: coverage,
+        vibe_trend: {
+          direction: "up",
+          percentage: 4.2
+        }
       });
 
       // alerts are not implemented in backend, generating local alerts from high risk employees

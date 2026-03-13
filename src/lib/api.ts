@@ -9,7 +9,7 @@ import type {
   EngagementSummary,
 } from "@/types";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;

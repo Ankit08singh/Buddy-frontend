@@ -48,7 +48,7 @@ export function RiskAlertPanel({
 
       <div className="space-y-3">
         {displayedAlerts.map((alert) => {
-          const riskDisplay = formatRiskLevel(alert.risk_level);
+          const riskDisplay = formatRiskLevel(alert.level);
           
           return (
             <div

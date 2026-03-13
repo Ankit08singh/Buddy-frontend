@@ -1,4 +1,4 @@
-import type { Employee, RiskLevel, TrendEntry } from "@/types";
+import type { EmployeeListItem as Employee, RiskLevel, TrendEntry } from "@/types";
 import { TrendDirection, type Emotion } from "@/types/enums";
 
 // Type guards for safe type checking
@@ -99,7 +99,7 @@ export function calculateVibeScoreStats(employees: Employee[]): VibeScoreStats {
   
   const riskCounts = employees.reduce(
     (acc, emp) => {
-      const risk = emp.flight_risk?.level as RiskLevel || "low";
+      const risk = emp.latest_sentiment?.flight_risk_level || "low";
       acc[risk]++;
       return acc;
     },
@@ -109,8 +109,8 @@ export function calculateVibeScoreStats(employees: Employee[]): VibeScoreStats {
   const total = employees.length;
   const distribution = Object.entries(riskCounts).map(([level, count]) => ({
     level: level as RiskLevel,
-    count,
-    percentage: total > 0 ? (count / total) * 100 : 0
+    count: count as number,
+    percentage: total > 0 ? ((count as number) / total) * 100 : 0
   }));
   
   return { average, median, distribution };
@@ -118,15 +118,18 @@ export function calculateVibeScoreStats(employees: Employee[]): VibeScoreStats {
 
 export function generateRiskAlerts(employees: Employee[]) {
   return employees
-    .filter(emp => emp.flight_risk && isHighRisk(emp.flight_risk.level as RiskLevel))
+    .filter(emp => emp.latest_sentiment?.flight_risk_level === "high")
     .map(emp => ({
+      id: `alert-${emp.employee_id}`,
       employee_id: emp.employee_id,
       employee_name: emp.name,
-      risk_level: emp.flight_risk!.level as RiskLevel,
-      primary_concern: emp.flight_risk?.reason || "General concern",
+      level: (emp.latest_sentiment?.flight_risk_level || "high") as RiskLevel,
+      message: `${emp.name} in ${emp.department} is currently showing high risk signals.`,
+      created_at: new Date().toISOString(),
+      primary_concern: "High risk flight level detected",
       days_since_last_session: Math.floor(Math.random() * 14), // Mock data
       vibe_score_trend: "down" as const,
       urgency: "high" as const
     }))
-    .sort((a, b) => b.days_since_last_session - a.days_since_last_session);
+    .sort((a, b) => (b.days_since_last_session || 0) - (a.days_since_last_session || 0));
 }

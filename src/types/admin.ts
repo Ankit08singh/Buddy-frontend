@@ -1,5 +1,5 @@
 import React from "react";
-import type { Emotion, RiskLevel, OverallSentiment } from "./enums";
+import type { Emotion, RiskLevel, OverallSentiment, TrendDirection } from "./enums";
 import type { EngagementSummary } from "./index";
 
 // --- RECONCILED BACKEND CONTRACT TYPES ---
@@ -100,6 +100,10 @@ export interface TeamStats {
   medium_risk_count: number;
   low_risk_count: number;
   active_sentiment_coverage: number;
+  vibe_trend?: {
+    direction: TrendDirection;
+    percentage: number;
+  };
 }
 
 export interface RiskAlert {
@@ -109,4 +113,9 @@ export interface RiskAlert {
   level: RiskLevel;
   message: string;
   created_at: string;
+  // Detail fields
+  primary_concern?: string;
+  days_since_last_session?: number;
+  vibe_score_trend?: 'up' | 'down' | 'stable';
+  urgency?: 'low' | 'medium' | 'high';
 }

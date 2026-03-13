@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/components/providers/AuthProvider";
-import type { Role } from "@/types";
+import type { UserRole } from "@/types";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles: Role[];
+  allowedRoles: UserRole[];
 }
 
 export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
