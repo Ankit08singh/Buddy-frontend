@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Component
         {...pageProps}
         darkMode={darkMode}
-        toggleDarkMode={() => setDarkMode((prev) => !prev)}
+        onToggleDarkMode={() => setDarkMode((prev) => !prev)}
       />
       <Toaster
         position="top-right"

@@ -224,16 +224,16 @@ export default function LandingPage({ darkMode, onToggleDarkMode }: LandingPageP
         </section>
 
         {/* Vision Section */}
-        <section id="about" className="py-32 bg-primary dark:bg-emerald-950 text-(--primary-foreground) rounded-[4rem] mx-6 mb-32 relative overflow-hidden">
+        <section id="about" className="py-32 bg-primary dark:bg-emerald-950 text-emerald-50 rounded-[4rem] mx-6 mb-32 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-32 opacity-10">
             <BuddyAvatar size="lg" className="w-96 h-96 scale-150 rotate-12" />
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center space-y-12 relative z-10">
             <Smile className="w-16 h-16 mx-auto opacity-50 mb-8" />
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-none">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-none text-white">
               Empathy is at the heart of everything we do.
             </h2>
-            <p className="text-xl md:text-2xl font-medium opacity-80 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl font-medium opacity-90 leading-relaxed max-w-2xl mx-auto text-emerald-100">
               We started Buddy with one mission: to make sure no employee ever feels unsupported in their workplace. Our AI is trained to listen first, analyze second.
             </p>
             <div className="pt-8">
