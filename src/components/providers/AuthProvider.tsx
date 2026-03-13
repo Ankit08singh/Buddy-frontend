@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { useRouter } from "next/router";
-import type { User, Role } from "@/types";
+import type { User, UserRole } from "@/types";
 import { api } from "@/lib/api";
 import {
   getStoredToken,
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const handleAuthSuccess = useCallback(
-    (newToken: string, role: Role) => {
+    (newToken: string, role: UserRole) => {
       setStoredToken(newToken);
       setToken(newToken);
       const userData = getUserFromToken(newToken);

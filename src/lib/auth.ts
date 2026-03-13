@@ -1,4 +1,4 @@
-import type { User, Role } from "@/types";
+import type { User, UserRole } from "@/types";
 
 const TOKEN_KEY = "buddy_token";
 
@@ -6,7 +6,7 @@ interface JwtPayload {
   sub: string;
   email: string;
   name: string;
-  role: Role;
+  role: UserRole;
   employee_id?: string;
   exp: number;
   iat: number;

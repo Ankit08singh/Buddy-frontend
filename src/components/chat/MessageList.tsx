@@ -27,10 +27,10 @@ export const MessageList: React.FC<MessageListProps> = ({
             <BuddyAvatar size="lg" className="relative z-10" />
           </div>
           <div>
-            <h2 className="text-2xl font-bold text-(--foreground) tracking-tight">
+            <h2 className="text-2xl font-black text-emerald-900 dark:text-emerald-400 tracking-tight">
               Welcome, {user?.name?.split(" ")[0] || "there"}
             </h2>
-            <p className="text-(--muted-foreground) mt-2">
+            <p className="text-(--muted-foreground) mt-3 text-sm font-medium leading-relaxed">
               I'm Buddy, your workspace companion. I'm here to listen and support you. How's your day going?
             </p>
           </div>

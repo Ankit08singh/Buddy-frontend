@@ -3,7 +3,7 @@ import { LucideIcon } from "lucide-react";
 
 interface MetricCardProps {
   title: string;
-  value: string;
+  value: React.ReactNode;
   subtitle?: string;
   secondaryValue?: string;
   icon: LucideIcon;

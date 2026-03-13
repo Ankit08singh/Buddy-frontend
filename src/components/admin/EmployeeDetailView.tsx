@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, Mail, RefreshCw, Heart, Zap, ShieldAlert, Clock, ShieldCheck, Briefcase } from "lucide-react";
+import { ArrowLeft, Mail, RefreshCw, Heart, Zap, ShieldAlert, Clock, ShieldCheck, Briefcase, Trophy, Sparkles } from "lucide-react";
 import { EmployeeListItem, RiskAlert } from "@/types";
 import { EmotionBadge, RiskBadge, Avatar } from "@/components/ui";
 import { MetricCard } from "./MetricCard";
@@ -78,7 +78,8 @@ export function EmployeeDetailView({
 
         <button
           onClick={() => onContactEmployee?.(employeeId, "email")}
-          className="flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-primary text-(--primary-foreground) text-sm font-black shadow-lg shadow-primary/20 hover:bg-emerald-900 transition-all active:scale-95"
+          className="flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-primary text-(--primary-foreground) text-sm 
+          font-black shadow-lg shadow-primary/20 hover:bg-emerald-900 transition-all active:scale-95"
         >
           <Mail className="w-4 h-4" />
           SEND ENCOURAGEMENT
@@ -93,8 +94,8 @@ export function EmployeeDetailView({
           <div className="relative">
             <div className="absolute -inset-2 bg-linear-to-tr from-primary to-accent rounded-full blur opacity-20 group-hover:opacity-40 transition duration-1000" />
             <Avatar name={employee.name} size="lg" className="relative w-40 h-40 text-5xl ring-4 ring-white dark:ring-slate-800 shadow-2xl" />
-            <div className={`absolute -bottom-2 -right-2 w-12 h-12 ${streak.colorClass} rounded-2xl shadow-xl flex items-center justify-center text-xl`}>
-              {streak.icon}
+            <div className={`absolute -bottom-2 -right-2 w-12 h-12 ${streak.colorClass} rounded-2xl shadow-xl flex items-center justify-center`}>
+              <streak.icon className="w-6 h-6" />
             </div>
           </div>
 
@@ -113,14 +114,14 @@ export function EmployeeDetailView({
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <MetricCard
                 title="Consistency Score"
-                value={`${employee.engagement?.current_streak} Day Streak`}
+                value={<span className="flex items-center gap-1.5"><streak.icon className="w-5 h-5" /> {employee.engagement?.current_streak} Day Streak</span>}
                 icon={Zap}
                 variant="success"
                 subtitle={motivation}
               />
               <MetricCard
                 title="Motivation Points"
-                value={`⭐ ${employee.engagement?.total_points}`}
+                value={<span className="flex items-center gap-2"><Trophy className="w-5 h-5 text-amber-500" /> {employee.engagement?.total_points}</span>}
                 icon={Heart}
                 subtitle="All-time engagement"
               />
@@ -166,8 +167,8 @@ export function EmployeeDetailView({
               {/* Consistency Insight */}
               <div className="p-10 rounded-[2.5rem] bg-white/80 dark:bg-slate-800/80 border border-(--border) shadow-sm space-y-8">
                 <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-2xl bg-primary/10 text-primary font-black">
-                    {streak.icon}
+                  <div className="p-3 rounded-2xl bg-primary/10 text-primary">
+                    <streak.icon className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="text-lg font-black uppercase tracking-tight text-(--foreground)">Engagement Tier</h3>

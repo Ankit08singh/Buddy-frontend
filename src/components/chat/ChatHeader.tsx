@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sun, Moon, LogOut, Info, MessageSquare, Clock, Calendar, Zap, Star } from "lucide-react";
+import { Sun, Moon, LogOut, Info, MessageSquare, Clock, Calendar, Zap, Star, Flame, Trophy } from "lucide-react";
 import { BuddyAvatar, Avatar } from "@/components/ui";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { EngagementSummary } from "@/types";
@@ -34,13 +34,13 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
             <BuddyAvatar size="md" className="relative bg-white dark:bg-slate-800 rounded-2xl" />
           </div>
           <div className="hidden sm:block">
-            <h1 className="text-base font-bold text-(--foreground) leading-none">Buddy</h1>
+            <h1 className="text-base font-black text-emerald-900 dark:text-emerald-400 leading-none tracking-tight">Buddy</h1>
             <div className="flex items-center gap-1.5 mt-1">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <span className="text-[10px] font-medium text-(--muted-foreground) tracking-tight uppercase">Ready to help</span>
+              <span className="text-[9px] font-bold text-(--muted-foreground) tracking-widest uppercase opacity-70">Ready to help</span>
             </div>
           </div>
         </div>
@@ -52,11 +52,11 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
             onClick={() => setShowDetails(!showDetails)}
           >
             <div className="flex items-center gap-1 pr-2 border-r border-(--border)">
-              <span className="text-sm">🔥</span>
+              <Flame className="w-4 h-4 text-orange-500" />
               <span className="text-xs font-black text-(--foreground)">{score.current_streak} day streak</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-sm">⭐</span>
+              <Trophy className="w-4 h-4 text-amber-500" />
               <span className="text-xs font-black text-(--foreground)">{score.total_points} points</span>
             </div>
             <Info className={`w-3 h-3 ml-1 text-(--muted-foreground) transition-transform ${showDetails ? 'rotate-180' : ''}`} />

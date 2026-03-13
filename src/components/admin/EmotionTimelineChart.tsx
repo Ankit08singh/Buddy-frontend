@@ -1,14 +1,14 @@
 import React from "react";
 import { 
   ResponsiveContainer, 
-  ScatterChart, 
-  Scatter, 
+  BarChart, 
+  Bar, 
   XAxis, 
   YAxis, 
-  ZAxis, 
   Tooltip, 
   CartesianGrid,
-  Cell
+  Cell,
+  ReferenceLine
 } from "recharts";
 import type { EmotionTimelinePoint } from "@/types";
 
@@ -28,58 +28,35 @@ const EMOTION_COLORS: Record<string, string> = {
   Apathy: "#9ca3af"
 };
 
-const EMOTION_ORDER = [
-  "Joy",
-  "Alignment",
-  "Neutral",
-  "Stress",
-  "Overwhelm",
-  "Frustration",
-  "Burnout",
-  "Apathy"
-];
-
 export const EmotionTimelineChart: React.FC<EmotionTimelineChartProps> = ({
   data,
   loading
 }) => {
-  if (loading) return <div className="h-[300px] w-full animate-pulse bg-slate-100 dark:bg-slate-800 rounded-3xl" />;
+  if (loading) return <div className="h-[400px] w-full animate-pulse bg-slate-100 dark:bg-slate-800 rounded-3xl" />;
   
-  if (data.length === 0) return <div className="h-[300px] flex items-center justify-center text-(--muted-foreground) italic text-sm">No timeline data available.</div>;
-
-  // Map emotions to Y-axis indices
-  const chartData = data.map(point => ({
-    ...point,
-    yIndex: EMOTION_ORDER.indexOf(point.emotion),
-    // Bubble size based on vibe score
-    z: point.vibe_score
-  }));
+  if (data.length === 0) return <div className="h-[400px] flex items-center justify-center text-(--muted-foreground) italic text-sm">No timeline data available.</div>;
 
   return (
-    <div className="h-[300px] w-full">
+    <div className="h-[400px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.3} />
+        <BarChart data={data} margin={{ top: 20, right: 30, bottom: 20, left: 10 }}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.2} />
           <XAxis 
             dataKey="date" 
-            name="Date"
             axisLine={false}
             tickLine={false}
-            tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 600 }}
+            tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 700 }}
+            padding={{ left: 10, right: 10 }}
           />
           <YAxis 
-            type="number" 
-            dataKey="yIndex" 
-            name="Emotion" 
-            ticks={[0, 1, 2, 3, 4, 5, 6, 7]}
-            tickFormatter={(index) => EMOTION_ORDER[index]}
+            domain={[0, 100]}
             axisLine={false}
             tickLine={false}
-            tick={{ fill: 'var(--foreground)', fontSize: 9, fontWeight: 700 }}
+            tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 800 }}
+            width={35}
           />
-          <ZAxis type="number" dataKey="z" range={[50, 400]} name="Vibe Score" />
           <Tooltip 
-            cursor={{ strokeDasharray: '3 3' }}
+            cursor={{ fill: 'var(--primary)', fillOpacity: 0.05 }}
             content={({ active, payload }) => {
               if (active && payload && payload.length) {
                 const data = payload[0].payload as EmotionTimelinePoint;
@@ -95,8 +72,11 @@ export const EmotionTimelineChart: React.FC<EmotionTimelineChartProps> = ({
                       <span className="text-(--foreground)">{data.vibe_score}</span>
                     </div>
                     <div className="flex justify-between gap-8 text-[10px] font-bold">
-                      <span className="text-(--muted-foreground)">Risk:</span>
-                      <span className="text-(--foreground) uppercase tracking-tighter">{data.risk}</span>
+                      <span className="text-(--muted-foreground)">Risk Level:</span>
+                      <span className={`uppercase tracking-tighter ${
+                        data.risk === 'high' ? 'text-red-500' : 
+                        data.risk === 'medium' ? 'text-amber-500' : 'text-emerald-500'
+                      }`}>{data.risk}</span>
                     </div>
                   </div>
                 );
@@ -104,12 +84,33 @@ export const EmotionTimelineChart: React.FC<EmotionTimelineChartProps> = ({
               return null;
             }}
           />
-          <Scatter name="Emotions" data={chartData}>
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={EMOTION_COLORS[entry.emotion] || "#64748b"} />
+          <ReferenceLine 
+            y={40} 
+            stroke="#ef4444" 
+            strokeDasharray="3 3" 
+            strokeOpacity={0.5}
+            label={{ 
+              value: 'RISK ZONE', 
+              position: 'insideBottomRight', 
+              fill: '#ef4444', 
+              fontSize: 9, 
+              fontWeight: 900,
+              opacity: 0.6
+            }} 
+          />
+          <Bar 
+            dataKey="vibe_score" 
+            radius={[6, 6, 6, 6]}
+            barSize={16}
+          >
+            {data.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={EMOTION_COLORS[entry.emotion] || "#64748b"} 
+              />
             ))}
-          </Scatter>
-        </ScatterChart>
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

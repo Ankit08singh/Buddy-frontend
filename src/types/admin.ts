@@ -1,3 +1,4 @@
+import React from "react";
 import type { Emotion, RiskLevel, OverallSentiment } from "./enums";
 import type { EngagementSummary } from "./index";
 
@@ -24,6 +25,7 @@ export interface EmployeeListItem {
   employee_id: string;
   name: string;
   department: string;
+  email: string;
   engagement: EmployeeEngagement;
   latest_sentiment: LatestSentiment | null;
 }
@@ -84,7 +86,7 @@ export interface StreakMeta {
   tier: StreakTier;
   label: string;
   colorClass: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   pulse?: boolean;
 }
 

@@ -123,7 +123,7 @@ export default function LandingPage({ darkMode, onToggleDarkMode }: LandingPageP
               </div>
               <h1 className="text-5xl md:text-7xl font-black text-(--foreground) tracking-tight leading-[0.95] animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
                 Your <span className="text-primary italic">Supportive</span> Workplace <br /> 
-                <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Companion</span>
+                <span className="bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">Companion</span>
               </h1>
               <p className="text-xl text-(--muted-foreground) font-medium leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
                 Buddy is an AI companion built with empathy at its core. We help you navigate workplace challenges and manage stress through secure, human-like conversations.

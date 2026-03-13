@@ -35,9 +35,22 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
 
   const handleContactEmployee = (employeeId: string, method: "email" | "phone") => {
     const employee = employees.find(emp => emp.employee_id === employeeId);
-    if (employee) {
-      // Backend EmployeeListItem doesn't currently provide email/phone
-      toast.error(`Direct ${method} contact info is not provided by the current backend`);
+    
+    if (employee && method === "email" && employee.email) {
+      navigator.clipboard.writeText(employee.email);
+      toast.success(`Copied ${employee.name}'s email to clipboard!`, {
+        icon: '📧',
+        style: {
+          borderRadius: '1rem',
+          background: '#064e3b',
+          color: '#fff',
+          fontWeight: 'bold',
+        },
+      });
+    } else if (employee && method === "phone") {
+      toast.error(`Phone contact info is not provided by the current backend`);
+    } else {
+      toast.error(`Contact info not found for this employee`);
     }
   };
 
@@ -56,7 +69,6 @@ function AdminContent({ darkMode, onToggleDarkMode }: AdminPageProps) {
     departments: [] as string[],
     riskLevels: [] as any[],
     activityStatus: "all" as any,
-    streakTier: "all" as any,
     timeRange: "month" as any,
     sortField: "name" as any,
     sortDirection: "asc" as any

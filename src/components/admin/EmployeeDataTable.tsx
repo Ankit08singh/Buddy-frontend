@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Search, Download, ArrowUpRight, ShieldAlert, Sparkles, Filter, Trophy } from "lucide-react";
+import { Search, Download, ArrowUpRight, ShieldAlert, Sparkles, Filter, Trophy, CheckCircle2, AlertCircle } from "lucide-react";
 import { Avatar, EmotionBadge, RiskBadge } from "@/components/ui";
 import type { EmployeeListItem, FilterTimeRange, RiskLevel } from "@/types";
 import { getStreakMeta } from "@/lib/streakUtils";
@@ -15,7 +15,6 @@ interface EmployeeDataTableProps {
     timeRange: FilterTimeRange;
     sortField: any;
     sortDirection: any;
-    streakTier?: "none" | "starter" | "active" | "elite" | "all";
   };
   onFilterChange: (filters: any) => void;
   onEmployeeClick: (id: string) => void;
@@ -34,13 +33,6 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
     return employees.filter(emp => {
       if (filters.search && !emp.name.toLowerCase().includes(filters.search.toLowerCase())) return false;
       if (filters.riskLevels.length && !filters.riskLevels.includes(emp.latest_sentiment?.flight_risk_level as any)) return false;
-      
-      const streak = emp.engagement.current_streak;
-      if (filters.streakTier === "none" && streak !== 0) return false;
-      if (filters.streakTier === "starter" && (streak < 1 || streak > 3)) return false;
-      if (filters.streakTier === "active" && (streak < 4 || streak > 7)) return false;
-      if (filters.streakTier === "elite" && streak < 8) return false;
-
       return true;
     });
   }, [employees, filters]);
@@ -75,24 +67,26 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
               className="w-full pl-12 pr-4 py-3 rounded-2xl border border-(--border) bg-white/50 dark:bg-slate-900/50 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
             />
           </div>
+          
           <div className="flex flex-wrap gap-2">
-            {[
-              { id: "all", label: "All Employees" },
-              { id: "elite", label: "👑 Elite (8+)" },
-              { id: "active", label: "🔥 Active (4-7)" },
-              { id: "starter", label: "🌱 Starters" },
-              { id: "none", label: "❄️ 0 Streak" }
-            ].map(tier => (
+            <span className="text-[10px] font-black text-(--muted-foreground) uppercase tracking-widest flex items-center mr-1">Risk:</span>
+            {(["low", "medium", "high"] as RiskLevel[]).map(level => (
               <button
-                key={tier.id}
-                onClick={() => onFilterChange({ ...filters, streakTier: tier.id })}
-                className={`px-4 py-2.5 rounded-xl text-xs font-black transition-all border ${
-                  (filters.streakTier || "all") === tier.id 
+                key={level}
+                onClick={() => {
+                  const newLevels = filters.riskLevels.includes(level)
+                    ? filters.riskLevels.filter(l => l !== level)
+                    : [...filters.riskLevels, level];
+                  onFilterChange({ ...filters, riskLevels: newLevels });
+                }}
+                className={`px-4 py-2.5 rounded-xl text-xs font-black transition-all border capitalize flex items-center gap-2 ${
+                  filters.riskLevels.includes(level)
                     ? "bg-primary text-white border-primary shadow-lg shadow-primary/20"
                     : "bg-white/50 dark:bg-slate-900/50 border-(--border) text-(--muted-foreground) hover:border-primary/40"
                 }`}
               >
-                {tier.label}
+                {level === "low" ? <CheckCircle2 className="w-3.5 h-3.5" /> : level === "medium" ? <AlertCircle className="w-3.5 h-3.5" /> : <ShieldAlert className="w-3.5 h-3.5" />}
+                {level === "low" ? "Low" : level === "medium" ? "Med" : "High"}
               </button>
             ))}
           </div>
@@ -146,7 +140,7 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
                     </td>
                     <td className="px-8 py-6">
                       <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full ${streak.colorClass} ${streak.pulse ? 'animate-pulse' : ''}`}>
-                         <span className="text-sm">{streak.icon}</span>
+                         <streak.icon className="w-3.5 h-3.5" />
                          <span className="text-xs font-black uppercase tracking-tight">{streak.label}</span>
                       </div>
                     </td>
@@ -154,7 +148,9 @@ export const EmployeeDataTable: React.FC<EmployeeDataTableProps> = ({
                       <div className="flex flex-col gap-1.5">
                         <div className="flex items-center justify-between gap-8">
                            <span className="text-[10px] font-bold text-(--muted-foreground) uppercase">Total Points</span>
-                           <span className="text-xs font-black text-primary">⭐ {emp.engagement.total_points}</span>
+                           <span className="text-xs font-black text-primary flex items-center gap-1">
+                             <Sparkles className="w-3.5 h-3.5" /> {emp.engagement.total_points}
+                           </span>
                         </div>
                         <div className="w-full h-1 bg-(--secondary) rounded-full overflow-hidden">
                            <div className="h-full bg-primary" style={{ width: `${Math.min(100, (emp.engagement.total_points / 500) * 100)}%` }} />

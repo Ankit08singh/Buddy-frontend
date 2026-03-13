@@ -1,3 +1,4 @@
+import { Snowflake, Sprout, Flame, Crown } from "lucide-react";
 import { StreakTier, StreakMeta } from "@/types/admin";
 
 /**
@@ -22,7 +23,7 @@ export function getStreakMeta(streak: number): StreakMeta {
         tier: "none",
         label: "0 day streak",
         colorClass: "bg-slate-100 dark:bg-slate-800 text-slate-500",
-        icon: "❄️",
+        icon: Snowflake,
         pulse: false
       };
     case "starter":
@@ -30,7 +31,7 @@ export function getStreakMeta(streak: number): StreakMeta {
         tier: "starter",
         label: `${streak} day streak`,
         colorClass: "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-200/50",
-        icon: "🌱",
+        icon: Sprout,
         pulse: false
       };
     case "active":
@@ -38,7 +39,7 @@ export function getStreakMeta(streak: number): StreakMeta {
         tier: "active",
         label: `${streak} day streak`,
         colorClass: "bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 border border-orange-300/50",
-        icon: "🔥",
+        icon: Flame,
         pulse: false
       };
     case "elite":
@@ -46,7 +47,7 @@ export function getStreakMeta(streak: number): StreakMeta {
         tier: "elite",
         label: `${streak} day streak`,
         colorClass: "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-400 border border-yellow-400/50 shadow-[0_0_15px_rgba(234,179,8,0.2)]",
-        icon: "👑",
+        icon: Crown,
         pulse: true
       };
   }

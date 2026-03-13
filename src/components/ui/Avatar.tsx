@@ -1,5 +1,5 @@
 import React from "react";
-import { getInitials, hashStringToColor } from "@/lib/utils";
+import { getInitials, hashStringToColor, cn } from "@/lib/utils";
 
 interface AvatarProps {
   name: string;
@@ -19,8 +19,12 @@ export function Avatar({ name, size = "md", className = "" }: AvatarProps) {
 
   return (
     <div
-      className={`rounded-full flex items-center justify-center font-medium text-white ${sizeClasses[size]} ${className}`}
-      style={{ backgroundColor: bgColor }}
+      className={cn(
+        "rounded-full flex items-center justify-center font-bold text-white shadow-sm ring-1 ring-white/10 shrink-0",
+        sizeClasses[size],
+        bgColor,
+        className
+      )}
     >
       {initials}
     </div>

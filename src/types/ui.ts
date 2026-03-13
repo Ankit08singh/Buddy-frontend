@@ -5,7 +5,7 @@ import type {
   FilterTimeRange, 
   ActiveStatus 
 } from "./enums";
-import type { Employee, TeamStats, RiskAlert } from "./admin";
+import type { EmployeeListItem , TeamStats, RiskAlert } from "./admin";
 
 // UI state management types
 export interface FilterState {
@@ -31,7 +31,7 @@ export interface ErrorState {
 }
 
 export interface AdminDashboardState {
-  employees: Employee[];
+  employees: EmployeeListItem [];
   selectedEmployee: string | null;
   filters: FilterState;
   loading: LoadingState;

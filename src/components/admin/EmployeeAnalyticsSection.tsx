@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { HelpCircle, TrendingUp, BarChart3, Clock } from "lucide-react";
+import { HelpCircle, TrendingUp, BarChart3, Clock, PieChart } from "lucide-react";
 import { api } from "@/lib/api";
 import { VibeScoreTrendChart } from "./VibeScoreTrendChart";
-import { EmotionDistributionCharts } from "./EmotionDistributionCharts";
+import { EmotionBarChart, EmotionPieChart } from "./EmotionDistributionCharts";
 import { EmotionTimelineChart } from "./EmotionTimelineChart";
 import type { 
   TrendEntry, 
@@ -89,24 +89,33 @@ export function EmployeeAnalyticsSection({ employeeId }: EmployeeAnalyticsSectio
       </AnalyticsCard>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Distribution */}
+        {/* Bar Chart */}
         <AnalyticsCard 
-          title="Emotion Count and Percentage" 
-          subtitle="Frequency and share of primary emotional states"
+          title="Frequency by Emotion" 
+          subtitle="Total occurrences of each emotional state"
           icon={<BarChart3 className="w-5 h-5 text-emerald-500" />}
         >
-          <EmotionDistributionCharts data={emotionDistribution} loading={loading} />
+          <EmotionBarChart data={emotionDistribution} loading={loading} />
         </AnalyticsCard>
 
-        {/* Timeline */}
+        {/* Pie Chart */}
         <AnalyticsCard 
-          title="When What Emotion Happened" 
-          subtitle="Time-based mapping of emotional occurrences"
-          icon={<Clock className="w-5 h-5 text-amber-500" />}
+          title="Emotional Share %" 
+          subtitle="Percentage distribution of primary emotions"
+          icon={<PieChart className="w-5 h-5 text-emerald-500" />}
         >
-          <EmotionTimelineChart data={emotionTimelineData} loading={loading} />
+          <EmotionPieChart data={emotionDistribution} loading={loading} />
         </AnalyticsCard>
       </div>
+
+      {/* Timeline - Full Width Below */}
+      <AnalyticsCard 
+        title="When What Emotion Happened" 
+        subtitle="Time-based mapping of emotional occurrences"
+        icon={<Clock className="w-5 h-5 text-amber-500" />}
+      >
+        <EmotionTimelineChart data={emotionTimelineData} loading={loading} />
+      </AnalyticsCard>
 
       {isEmpty && (
         <div className="p-12 text-center bg-slate-50 dark:bg-slate-900/50 rounded-[2rem] border border-dashed border-(--border)">
